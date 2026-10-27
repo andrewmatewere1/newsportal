@@ -1,0 +1,56 @@
+{% if active_popup_advert and active_popup_advert.image %}
+<div id="news-advert-popup" class="news-advert-overlay" data-advert-id="{{ active_popup_advert.pk }}" data-frequency="{{ active_popup_advert.frequency }}" data-delay="{{ active_popup_advert.delay_seconds }}" role="dialog" aria-modal="true" aria-label="Advertisement" hidden>
+  <div class="news-advert-dialog">
+    <button type="button" class="news-advert-close" aria-label="Close advertisement">&times;</button>
+    <div class="news-advert-label">Advertisement{% if active_popup_advert.advertiser_name %} · {{ active_popup_advert.advertiser_name }}{% endif %}</div>
+    {% if active_popup_advert.target_url %}
+      <a href="{{ active_popup_advert.target_url }}" target="_blank" rel="sponsored noopener noreferrer" aria-label="Visit advertiser: {{ active_popup_advert.title }}">
+        <img src="{{ active_popup_advert.image.url }}" alt="{{ active_popup_advert.title }}" class="news-advert-image">
+      </a>
+    {% else %}
+      <img src="{{ active_popup_advert.image.url }}" alt="{{ active_popup_advert.title }}" class="news-advert-image">
+    {% endif %}
+    <div class="news-advert-caption">{{ active_popup_advert.title }}</div>
+  </div>
+</div>
+<style>
+.news-advert-overlay{position:fixed;inset:0;z-index:99999;background:rgba(12,18,28,.72);display:flex;align-items:center;justify-content:center;padding:18px}
+.news-advert-overlay[hidden]{display:none!important}
+.news-advert-dialog{position:relative;background:#fff;border-radius:12px;max-width:min(760px,96vw);max-height:92vh;overflow:auto;box-shadow:0 18px 60px rgba(0,0,0,.35);padding:16px;width:auto}
+.news-advert-close{position:absolute;right:8px;top:8px;z-index:2;border:0;border-radius:50%;width:38px;height:38px;font-size:28px;line-height:1;background:#111;color:#fff;cursor:pointer}
+.news-advert-label{font:600 12px/1.4 Arial,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:#555;padding:3px 48px 12px 2px}
+.news-advert-image{display:block;max-width:100%;max-height:72vh;width:auto;height:auto;object-fit:contain;margin:auto}
+.news-advert-caption{font:600 15px/1.4 Arial,sans-serif;color:#222;padding:10px 2px 2px}
+body.news-advert-open{overflow:hidden}
+@media(max-width:600px){.news-advert-dialog{padding:12px;max-width:96vw}.news-advert-image{max-height:68vh}.news-advert-close{width:34px;height:34px}}
+</style>
+<script>
+(function(){
+  var popup=document.getElementById('news-advert-popup');
+  if(!popup) return;
+  var id=popup.dataset.advertId, frequency=popup.dataset.frequency;
+  var storageKey='newsportal-advert-'+id;
+  function alreadySeen(){
+    try {
+      if(frequency==='session') return sessionStorage.getItem(storageKey)==='1';
+      if(frequency==='24h'){var last=Number(localStorage.getItem(storageKey)||0);return last>0&&(Date.now()-last)<86400000;}
+    } catch(e) {}
+    return false;
+  }
+  function markSeen(){
+    try {
+      if(frequency==='session') sessionStorage.setItem(storageKey,'1');
+      else if(frequency==='24h') localStorage.setItem(storageKey,String(Date.now()));
+    } catch(e) {}
+  }
+  function closePopup(){popup.hidden=true;document.body.classList.remove('news-advert-open');}
+  var closeButton=popup.querySelector('.news-advert-close');
+  closeButton.addEventListener('click',closePopup);
+  popup.addEventListener('click',function(e){if(e.target===popup) closePopup();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!popup.hidden) closePopup();});
+  if(alreadySeen()) return;
+  var delay=Math.max(0,Math.min(60,Number(popup.dataset.delay)||0))*1000;
+  window.setTimeout(function(){popup.hidden=false;document.body.classList.add('news-advert-open');markSeen();closeButton.focus();},delay);
+})();
+</script>
+{% endif %}

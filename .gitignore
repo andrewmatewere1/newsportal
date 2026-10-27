@@ -1,0 +1,28 @@
+# Python / virtual environments
+__pycache__/
+*.py[cod]
+*.pyo
+*.so
+venv/
+.venv/
+env/
+ENV/
+
+# Secrets and local databases
+.env
+.env.*.local
+*.sqlite3
+*.db
+# Historical SQL dump contains account/user data: keep out of Git repositories.
+database/*.sql
+
+# Generated files and user uploads (deploy media separately if needed)
+staticfiles/
+media/
+*.log
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,51 @@
+
+{% load static %}
+<footer>
+    <!-- Footer Start-->
+    <div class="footer-main footer-bg">
+        
+        <!-- footer-bottom aera -->
+        <div class="footer-bottom-area footer-bg">
+            <div class="container">
+                <nav class="news-social-links" aria-label="Follow us on social media">
+                    <h2 class="news-social-title">Follow us</h2>
+                    <div class="news-social-icons">
+                        {% for social in social_links %}
+                            {% if social.configured %}
+                            <a class="news-social-link {{ social.class }}" href="{{ social.url }}" target="_blank" rel="noopener noreferrer" aria-label="Visit our {{ social.name }} page" title="{{ social.name }}" data-social-platform="{{ social.name|lower }}">
+                                <i class="{{ social.icon }}" aria-hidden="true"></i><span>{{ social.name }}</span>
+                            </a>
+                            {% else %}
+                            <span class="news-social-link {{ social.class }} is-unconfigured" aria-label="{{ social.name }} link not configured" aria-disabled="true" title="{{ social.name }} link not configured yet" data-social-platform="{{ social.name|lower }}">
+                                <i class="{{ social.icon }}" aria-hidden="true"></i><span>{{ social.name }}</span>
+                            </span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </nav>
+                <div class="footer-border">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-xl-12 ">
+                            <div class="footer-copy-right text-center">
+                                <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+  Copyright &copy;<script>document.write(new Date().getFullYear());</script> Online News Portal System <i class="fa fa-heart" aria-hidden="true"></i> Python(Django)
+  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End-->
+</footer>
+<!-- Search model Begin -->
+<div class="search-model-box">
+    <div class="d-flex align-items-center h-100 justify-content-center">
+        <div class="search-close-btn">+</div>
+        <form class="search-model-form"  method="get" action="">
+            <input type="text" id="search-input" name="q" placeholder="Search by title or category">  <button type="submit">Search</button>
+        </form>
+    </div>
+</div>
+<!-- Search model end -->

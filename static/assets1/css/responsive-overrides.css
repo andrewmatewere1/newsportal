@@ -1,0 +1,122 @@
+footer .footer-main,
+footer .footer-bottom-area {
+    background-color: #10243a;
+    background-image: none;
+    color: #fff;
+}
+
+.news-social-links {
+    color: #fff;
+}
+
+.news-social-link,
+.news-social-link:visited {
+    border-color: transparent;
+    color: #fff;
+    font-weight: 600;
+}
+
+.news-social-link.social-facebook {
+    background-color: #1877f2;
+}
+
+.news-social-link.social-x {
+    background-color: #111;
+}
+
+.news-social-link.social-instagram {
+    background: linear-gradient(135deg, #833ab4, #fd1d1d 55%, #fcb045);
+}
+
+.news-social-link.social-whatsapp {
+    background-color: #128c4a;
+}
+
+.news-social-link.is-unconfigured {
+    opacity: .82;
+}
+
+.news-social-link:hover,
+.news-social-link:focus-visible {
+    color: #fff;
+    filter: brightness(1.12);
+}
+
+.footer-copy-right,
+.footer-copy-right p {
+    color: #e7edf5;
+}
+
+@media (max-width: 767.98px) {
+    html,
+    body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    main {
+        min-width: 0;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    img,
+    video,
+    iframe {
+        max-width: 100%;
+    }
+
+    .header-mid .header-banner {
+        float: none;
+        text-align: center;
+    }
+
+    .header-mid .header-banner img {
+        width: auto;
+        max-height: 110px;
+        object-fit: contain;
+    }
+
+    .news-social-links {
+        padding: 20px 0;
+    }
+
+    .news-social-icons {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .news-social-link {
+        width: 100%;
+        min-width: 0;
+        min-height: 46px;
+        padding: 10px 8px;
+    }
+
+    .posts-list,
+    .blog_right_sidebar {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .blog_details h2 {
+        font-size: clamp(1.4rem, 5vw, 2rem);
+        overflow-wrap: anywhere;
+    }
+
+    .blog_details p,
+    .whats-right-cap,
+    .whates-caption {
+        overflow-wrap: anywhere;
+    }
+
+    table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+}

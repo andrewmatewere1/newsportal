@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="pagetitle"><h1>{{ page_title }}</h1><nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li><li class="breadcrumb-item"><a href="{% url 'manage_advertisements' %}">Advertisements</a></li><li class="breadcrumb-item active">{{ page_title }}</li></ol></nav></div>
+<section class="section"><div class="row"><div class="col-lg-10">
+  <div class="card"><div class="card-body">
+    <h5 class="card-title">Campaign details</h5>
+    <p class="text-muted">The campaign only displays when its status is Active and the current time falls between its start and end times.</p>
+    <form method="post" enctype="multipart/form-data" novalidate>{% csrf_token %}
+      {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+      <div class="row">
+      {% for field in form %}
+        <div class="col-md-6 mb-3" id="field-wrap-{{ field.name }}">
+          <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+          {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+      {% endfor %}
+      </div>
+      {% if advert and advert.image %}<p>Current image: <img src="{{ advert.image.url }}" alt="" style="max-width:220px;max-height:120px;object-fit:contain"></p>{% endif %}
+      <div class="alert alert-info"><strong>Scheduling tip:</strong> Choose 24 hours, 7 days, or 30 days to calculate the end time automatically from the start time. Choose Custom to set the exact end date and time.</div>
+      <button class="btn btn-primary" type="submit">Save campaign</button>
+      <a class="btn btn-secondary" href="{% url 'manage_advertisements' %}">Cancel</a>
+    </form>
+  </div></div>
+</div></div></section>
+<script>
+(function(){
+  var duration=document.getElementById('id_duration_preset');
+  var start=document.getElementById('id_start_at');
+  var end=document.getElementById('id_end_at');
+  var endWrap=document.getElementById('field-wrap-end_at');
+  if(!duration||!start||!end) return;
+  function updateEnd(){
+    var custom=duration.value==='custom';
+    end.disabled=!custom;
+    end.required=custom;
+    if(endWrap) endWrap.style.opacity=custom?'1':'.65';
+    if(!custom && start.value){
+      var d=new Date(start.value);
+      var hours={'24h':24,'7d':168,'30d':720}[duration.value];
+      if(hours){d.setMinutes(d.getMinutes()+hours*60);var pad=n=>String(n).padStart(2,'0');end.value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());}
+    }
+  }
+  duration.addEventListener('change',updateEnd);
+  start.addEventListener('change',updateEnd);
+  updateEnd();
+})();
+</script>
+{% endblock %}
