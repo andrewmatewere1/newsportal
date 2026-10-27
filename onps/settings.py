@@ -1,8 +1,11 @@
-"""Django settings for the News Portal.
+
+"""
+Django settings for the News Portal.
 
 Local development defaults to SQLite. Production should provide SECRET_KEY,
 ALLOWED_HOSTS and DATABASE_URL through environment variables.
 """
+
 from pathlib import Path
 import os
 import dj_database_url
@@ -13,22 +16,52 @@ load_dotenv(BASE_DIR / ".env")
 
 
 def env_bool(name, default=False):
-    return os.environ.get(name, str(default)).strip().lower() in {"1", "true", "yes", "on"}
+    return (
+        os.environ.get(name, str(default))
+        .strip()
+        .lower()
+        in {"1", "true", "yes", "on"}
+    )
 
 
 def env_list(name, default=""):
-    return [item.strip() for item in os.environ.get(name, default).split(",") if item.strip()]
+    return [
+        item.strip()
+        for item in os.environ.get(name, default).split(",")
+        if item.strip()
+    ]
 
+
+# --------------------------------------------------
+# Core security settings
+# --------------------------------------------------
 
 DEBUG = env_bool("DEBUG", False)
+
 SECRET_KEY = os.environ.get("SECRET_KEY")
 if not SECRET_KEY:
     if not DEBUG:
-        raise RuntimeError("SECRET_KEY must be configured in production.")
-    SECRET_KEY = "django-insecure-local-development-only-change-before-deployment"
+        raise RuntimeError(
+            "SECRET_KEY must be configured in production."
+        )
+    SECRET_KEY = (
+        "django-insecure-local-development-only-change-before-deployment"
+    )
 
-ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "localhost,127.0.0.1,[::1]")
-CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS", "")
+ALLOWED_HOSTS = env_list(
+    "ALLOWED_HOSTS",
+    "localhost,127.0.0.1,[::1]",
+)
+
+CSRF_TRUSTED_ORIGINS = env_list(
+    "CSRF_TRUSTED_ORIGINS",
+    "",
+)
+
+
+# --------------------------------------------------
+# Applications
+# --------------------------------------------------
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -39,6 +72,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "newsapp",
 ]
+
+
+# --------------------------------------------------
+# Middleware
+# --------------------------------------------------
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -51,7 +89,13 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+
+# --------------------------------------------------
+# URL and template configuration
+# --------------------------------------------------
+
 ROOT_URLCONF = "onps.urls"
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -71,11 +115,16 @@ TEMPLATES = [
         },
     },
 ]
+
 WSGI_APPLICATION = "onps.wsgi.application"
 
-# DATABASE_URL is recommended for hosted PostgreSQL. MySQL can be retained
-# with DB_ENGINE=mysql and the DB_* environment variables.
+
+# --------------------------------------------------
+# Database configuration
+# --------------------------------------------------
+
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
+
 if DATABASE_URL:
     DATABASES = {
         "default": dj_database_url.parse(
@@ -84,6 +133,7 @@ if DATABASE_URL:
             conn_health_checks=True,
         )
     }
+
 elif os.environ.get("DB_ENGINE", "").lower() == "mysql":
     DATABASES = {
         "default": {
@@ -94,95 +144,251 @@ elif os.environ.get("DB_ENGINE", "").lower() == "mysql":
             "HOST": os.environ.get("DB_HOST", ""),
             "PORT": os.environ.get("DB_PORT", "3306"),
             "CONN_MAX_AGE": 600,
-            "OPTIONS": {"charset": "utf8mb4"},
+            "OPTIONS": {
+                "charset": "utf8mb4",
+            },
         }
     }
+
 else:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
-            "OPTIONS": {"timeout": 20},
+            "OPTIONS": {
+                "timeout": 20,
+            },
         }
     }
 
+
+# --------------------------------------------------
+# Password validation
+# --------------------------------------------------
+
 AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+    {
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "UserAttributeSimilarityValidator"
+        ),
+    },
+    {
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "MinimumLengthValidator"
+        ),
+    },
+    {
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "CommonPasswordValidator"
+        ),
+    },
+    {
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "NumericPasswordValidator"
+        ),
+    },
 ]
+
+
+# --------------------------------------------------
+# Internationalization
+# --------------------------------------------------
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = os.environ.get("TIME_ZONE", "UTC")
 USE_I18N = True
 USE_TZ = True
 
+
+# --------------------------------------------------
+# Static files and media
+# --------------------------------------------------
+
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static"] if (BASE_DIR / "static").is_dir() else []
+
+STATICFILES_DIRS = (
+    [BASE_DIR / "static"]
+    if (BASE_DIR / "static").is_dir()
+    else []
+)
+
 STORAGES = {
-    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": (
+            "whitenoise.storage.CompressedManifestStaticFilesStorage"
+        ),
+    },
 }
+
 if os.environ.get("AWS_STORAGE_BUCKET_NAME"):
     STORAGES["default"] = {
         "BACKEND": "storages.backends.s3.S3Storage",
         "OPTIONS": {
             "bucket_name": os.environ["AWS_STORAGE_BUCKET_NAME"],
             "region_name": os.environ.get("AWS_S3_REGION_NAME", ""),
-            "endpoint_url": os.environ.get("AWS_S3_ENDPOINT_URL") or None,
-            "custom_domain": os.environ.get("AWS_S3_CUSTOM_DOMAIN") or None,
+            "endpoint_url": (
+                os.environ.get("AWS_S3_ENDPOINT_URL") or None
+            ),
+            "custom_domain": (
+                os.environ.get("AWS_S3_CUSTOM_DOMAIN") or None
+            ),
             "querystring_auth": False,
             "file_overwrite": False,
         },
     }
+
 MEDIA_URL = "/media/"
-# Existing ImageField values are stored with a leading "media/" path
-# (e.g. media/news/image.jpg), so BASE_DIR preserves the current layout.
-# For production, set MEDIA_ROOT only when using a persistent disk; object
-# storage is preferable for public uploads.
-MEDIA_ROOT = Path(os.environ.get("MEDIA_ROOT", str(BASE_DIR)))
+
+# Existing ImageField values may use paths beginning with "media/".
+# Configure MEDIA_ROOT according to your production media-storage strategy.
+MEDIA_ROOT = Path(
+    os.environ.get("MEDIA_ROOT", str(BASE_DIR))
+)
+
+
+# --------------------------------------------------
+# Authentication
+# --------------------------------------------------
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 AUTH_USER_MODEL = "newsapp.CustomUser"
+
 LOGIN_URL = "/Login"
 LOGIN_REDIRECT_URL = "/Dashboard"
 LOGOUT_REDIRECT_URL = "/Login"
+
+
+# --------------------------------------------------
+# Session and browser security
+# --------------------------------------------------
 
 SESSION_COOKIE_AGE = 1209600
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_SAMESITE = "Lax"
+
 CSRF_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SAMESITE = "Lax"
+
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = "same-origin"
 X_FRAME_OPTIONS = "DENY"
 
-# Render and most managed platforms terminate TLS at a trusted proxy.
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-SECURE_SSL_REDIRECT = env_bool("SECURE_SSL_REDIRECT", not DEBUG)
-SECURE_HSTS_SECONDS = int(os.environ.get("SECURE_HSTS_SECONDS", "31536000" if not DEBUG else "0"))
-SECURE_HSTS_INCLUDE_SUBDOMAINS = env_bool("SECURE_HSTS_INCLUDE_SUBDOMAINS", False)
-SECURE_HSTS_PRELOAD = env_bool("SECURE_HSTS_PRELOAD", False)
+# Render terminates HTTPS at its proxy.
+SECURE_PROXY_SSL_HEADER = (
+    "HTTP_X_FORWARDED_PROTO",
+    "https",
+)
+
+SECURE_SSL_REDIRECT = env_bool(
+    "SECURE_SSL_REDIRECT",
+    not DEBUG,
+)
+
+SECURE_HSTS_SECONDS = int(
+    os.environ.get(
+        "SECURE_HSTS_SECONDS",
+        "31536000" if not DEBUG else "0",
+    )
+)
+
+SECURE_HSTS_INCLUDE_SUBDOMAINS = env_bool(
+    "SECURE_HSTS_INCLUDE_SUBDOMAINS",
+    False,
+)
+
+SECURE_HSTS_PRELOAD = env_bool(
+    "SECURE_HSTS_PRELOAD",
+    False,
+)
+
+
+# --------------------------------------------------
+# Email
+# --------------------------------------------------
 
 EMAIL_BACKEND = os.environ.get(
     "EMAIL_BACKEND",
-    "django.core.mail.backends.console.EmailBackend" if DEBUG else "django.core.mail.backends.smtp.EmailBackend",
+    (
+        "django.core.mail.backends.console.EmailBackend"
+        if DEBUG
+        else "django.core.mail.backends.smtp.EmailBackend"
+    ),
 )
+
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "")
 EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+
 EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", True)
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or "webmaster@localhost")
+
+DEFAULT_FROM_EMAIL = os.environ.get(
+    "DEFAULT_FROM_EMAIL",
+    EMAIL_HOST_USER or "webmaster@localhost",
+)
+
+
+# --------------------------------------------------
+# Upload limits
+# --------------------------------------------------
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 
-# Owner-supplied social destinations. Leave blank until verified links are available.
-SOCIAL_FACEBOOK_URL = os.environ.get("SOCIAL_FACEBOOK_URL", "").strip()
-SOCIAL_X_URL = os.environ.get("SOCIAL_X_URL", "").strip()
-SOCIAL_INSTAGRAM_URL = os.environ.get("SOCIAL_INSTAGRAM_URL", "").strip()
-SOCIAL_WHATSAPP_URL = os.environ.get("SOCIAL_WHATSAPP_URL", "").strip()
+
+# --------------------------------------------------
+# Social links
+# --------------------------------------------------
+
+SOCIAL_FACEBOOK_URL = os.environ.get(
+    "SOCIAL_FACEBOOK_URL", ""
+).strip()
+
+SOCIAL_X_URL = os.environ.get(
+    "SOCIAL_X_URL", ""
+).strip()
+
+SOCIAL_INSTAGRAM_URL = os.environ.get(
+    "SOCIAL_INSTAGRAM_URL", ""
+).strip()
+
+SOCIAL_WHATSAPP_URL = os.environ.get(
+    "SOCIAL_WHATSAPP_URL", ""
+).strip()
+
+
+# --------------------------------------------------
+# Logging: send Django errors to Render runtime logs
+# --------------------------------------------------
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "django": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": True,
+        },
+    },
+}
