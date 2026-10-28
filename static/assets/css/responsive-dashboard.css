@@ -1,0 +1,156 @@
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 1199.98px) {
+  #main {
+    margin-left: 0 !important;
+    width: 100%;
+    padding: 76px 12px 24px;
+  }
+
+  #footer {
+    margin-left: 0 !important;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .header {
+    padding-left: 12px;
+    padding-right: 8px;
+  }
+
+  .header .logo {
+    width: auto;
+  }
+
+  .header .logo span {
+    font-size: 20px;
+  }
+
+  .header-nav {
+    min-width: 0;
+  }
+
+  .header-nav > ul {
+    margin-bottom: 0;
+  }
+
+  .header-nav .nav-profile .profile-img {
+    max-width: 32px;
+  }
+
+  .sidebar {
+    box-shadow: 0 8px 30px rgba(1, 41, 112, .18);
+  }
+
+  .toggle-sidebar .sidebar {
+    left: 0;
+    top: 60px;
+  }
+
+  .card,
+  .card-body,
+  .section,
+  .row {
+    min-width: 0;
+  }
+
+  .card-body {
+    padding: 16px;
+  }
+
+  .card .info-card {
+    width: 100%;
+  }
+
+  .table-responsive,
+  .datatable-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 720px;
+  }
+
+  form .form-control,
+  form .form-select,
+  textarea {
+    width: 100%;
+  }
+
+  .input-group {
+    flex-wrap: wrap;
+  }
+
+  .breadcrumb {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 575.98px) {
+  #main {
+    padding: 72px 8px 20px;
+  }
+
+  .pagetitle h1 {
+    font-size: 21px;
+  }
+
+  .pagetitle nav {
+    display: none;
+  }
+
+  .dashboard .row > [class*="col-"] {
+    width: 100%;
+  }
+
+  .card-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+  }
+
+  .card-title {
+    padding: 12px 0;
+  }
+
+  .header-nav .nav-profile {
+    padding-right: 0;
+  }
+
+  .header-nav .nav-profile img {
+    width: 34px;
+    height: 34px;
+  }
+
+  .dropdown-menu {
+    max-width: calc(100vw - 16px);
+  }
+
+  .btn,
+  .form-control,
+  .form-select {
+    min-height: 42px;
+  }
+
+  .btn-group,
+  .action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .modal-dialog {
+    margin: 8px;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}

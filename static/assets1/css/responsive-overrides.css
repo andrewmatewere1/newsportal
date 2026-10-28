@@ -119,4 +119,130 @@ footer .footer-bottom-area {
         max-width: 100%;
         overflow-x: auto;
     }
+
+    .header-mid .col-md-9,
+    .header-mid .col-md-3 {
+        width: 100%;
+    }
+
+    .header-mid {
+        padding: 12px 0;
+    }
+
+    .header-mid .header-banner {
+        display: none;
+    }
+
+    .header-mid .logo {
+        text-align: center;
+    }
+
+    .header-bottom {
+        min-height: 48px;
+    }
+
+    .header-bottom .header-flex {
+        width: 75%;
+        float: left;
+    }
+
+    .header-bottom .col-md-4,
+    .header-bottom .col-xl-4,
+    .header-bottom .header-right {
+        display: none !important;
+    }
+
+    .mobile_menu {
+        min-height: 48px;
+        text-align: right;
+    }
+
+    .slicknav_menu {
+        position: relative;
+        z-index: 1000;
+        background: transparent;
+    }
+
+    .slicknav_nav {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 48px;
+        width: 100%;
+        background: #fff;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, .12);
+        z-index: 999;
+    }
+
+    .trending-area .col-lg-8,
+    .trending-area .col-lg-4,
+    .whats-news-area .col-lg-8,
+    .whats-news-area .col-lg-4 {
+        width: 100%;
+    }
+
+    .trend-top-img,
+    .single-slider,
+    .whats-right-single,
+    .weekly2-single {
+        width: 100%;
+    }
+
+    .trend-top-img img,
+    .single-slider img,
+    .whats-right-img img,
+    .weekly2-img img,
+    .single-post img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        aspect-ratio: 16 / 10;
+    }
+
+    .trend-top-cap {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        padding: 12px;
+    }
+
+    .trend-top-cap h2 {
+        font-size: clamp(18px, 5vw, 28px);
+        line-height: 1.2;
+    }
+
+    .trend-top-cap h2 a,
+    .trend-top-cap2 h2 a {
+        overflow-wrap: anywhere;
+    }
+
+    .whats-news-caption h4,
+    .blog_details h2 {
+        font-size: clamp(1.25rem, 5vw, 1.75rem);
+    }
+
+    .footer-area,
+    footer .footer-main,
+    footer .footer-bottom-area {
+        text-align: center;
+    }
+
+    .footer-area .single-footer-caption,
+    footer .footer-copy-right {
+        margin-bottom: 18px;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .search-box,
+    .search-box input,
+    .search-box button {
+        max-width: 100%;
+    }
+
+    .category-sidebar,
+    .sidebar-widget,
+    .blog_right_sidebar {
+        margin-top: 24px;
+    }
 }
