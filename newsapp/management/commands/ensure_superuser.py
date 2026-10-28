@@ -29,13 +29,16 @@ class Command(BaseCommand):
         if not user.is_superuser:
             user.is_superuser = True
             changed = True
+        if not user.is_active:
+            user.is_active = True
+            changed = True
         if str(user.user_type) != "1":
             user.user_type = 1
             changed = True
         if email and user.email != email:
             user.email = email
             changed = True
-        if created:
+        if created or not user.check_password(password):
             user.set_password(password)
             changed = True
 
